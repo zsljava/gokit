@@ -1,4 +1,4 @@
-package common
+package response
 
 import (
 	"errors"
@@ -14,18 +14,15 @@ type Response struct {
 	TraceId string      `json:"trace_id"`
 }
 
-func HandleSuccess(ctx *gin.Context, data interface{}) {
+func Success(ctx *gin.Context, data interface{}) {
 	if data == nil {
 		data = map[string]interface{}{}
 	}
-	resp := Response{Code: errorCodeMap[ErrSuccess], Message: ErrSuccess.Error(), Data: data, TraceId: util.GetTraceId(ctx)}
-	if _, ok := errorCodeMap[ErrSuccess]; !ok {
-		resp = Response{Code: 0, Message: "", Data: data}
-	}
+	resp := Response{Code: 0, Message: "ok", Data: data, TraceId: util.GetTraceId(ctx)}
 	ctx.JSON(http.StatusOK, resp)
 }
 
-func HandleError(ctx *gin.Context, httpCode int, err error, data interface{}) {
+func Error(ctx *gin.Context, httpCode int, err error, data interface{}) {
 	if data == nil {
 		data = map[string]string{}
 	}
@@ -36,18 +33,18 @@ func HandleError(ctx *gin.Context, httpCode int, err error, data interface{}) {
 	ctx.JSON(httpCode, resp)
 }
 
-type Error struct {
+type RespError struct {
 	Code    int
 	Message string
 }
 
 var errorCodeMap = map[error]int{}
 
-func newError(code int, msg string) error {
+func NewError(code int, msg string) error {
 	err := errors.New(msg)
 	errorCodeMap[err] = code
 	return err
 }
-func (e Error) Error() string {
+func (e RespError) Error() string {
 	return e.Message
 }

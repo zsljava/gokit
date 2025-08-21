@@ -2,7 +2,8 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/zsljava/gokit/common"
+	"github.com/zsljava/gokit/common/exception"
+	"github.com/zsljava/gokit/common/response"
 	"github.com/zsljava/gokit/jwt"
 	"github.com/zsljava/gokit/log"
 	"go.uber.org/zap"
@@ -17,7 +18,7 @@ func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
-			common.HandleError(ctx, http.StatusUnauthorized, common.ErrUnauthorized, nil)
+			response.Error(ctx, http.StatusUnauthorized, exception.ErrUnauthorized, nil)
 			ctx.Abort()
 			return
 		}
@@ -28,7 +29,7 @@ func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}), zap.Error(err))
-			common.HandleError(ctx, http.StatusUnauthorized, common.ErrUnauthorized, nil)
+			response.Error(ctx, http.StatusUnauthorized, exception.ErrUnauthorized, nil)
 			ctx.Abort()
 			return
 		}

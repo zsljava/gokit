@@ -4,7 +4,8 @@ import (
 	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
-	"github.com/zsljava/gokit/common"
+	"github.com/zsljava/gokit/common/exception"
+	"github.com/zsljava/gokit/common/response"
 	"github.com/zsljava/gokit/log"
 	"net/http"
 	"sort"
@@ -18,7 +19,7 @@ func SignMiddleware(logger *log.Logger, conf *viper.Viper) gin.HandlerFunc {
 		for _, header := range requiredHeaders {
 			value, ok := ctx.Request.Header[header]
 			if !ok || len(value) == 0 {
-				common.HandleError(ctx, http.StatusBadRequest, common.ErrBadRequest, nil)
+				response.Error(ctx, http.StatusBadRequest, exception.ErrBadRequest, nil)
 				ctx.Abort()
 				return
 			}
@@ -44,7 +45,7 @@ func SignMiddleware(logger *log.Logger, conf *viper.Viper) gin.HandlerFunc {
 		str += conf.GetString("security.api_sign.app_security")
 
 		if ctx.Request.Header.Get("Sign") != strings.ToUpper(cryptor.Md5String(str)) {
-			common.HandleError(ctx, http.StatusBadRequest, common.ErrBadRequest, nil)
+			response.Error(ctx, http.StatusBadRequest, exception.ErrBadRequest, nil)
 			ctx.Abort()
 			return
 		}
