@@ -6,4 +6,5 @@ type Server struct {
 	JWT    JWT        `mapstructure:"jwt" json:"jwt" yaml:"jwt"`
 	Redis  Redis      `mapstructure:"redis" json:"redis" yaml:"redis"`
 	Mysql  Mysql      `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
+	Sqlite Sqlite     `mapstructure:"sqlite" json:"sqlite" yaml:"sqlite"`
 }
