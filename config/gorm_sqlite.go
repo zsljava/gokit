@@ -12,6 +12,6 @@ func (s *Sqlite) Dsn() string {
 	return filepath.Join(s.Path, s.Dbname+".db")
 }
 
-func (m *Mysql) IsSqlite() bool {
+func (m *Sqlite) IsSqlite() bool {
 	return m.Dbname != ""
 }
