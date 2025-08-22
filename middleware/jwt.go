@@ -19,7 +19,7 @@ func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
-			response.Error(ctx, http.StatusUnauthorized, ErrUnauthorized, nil)
+			response.Error(ctx, ErrUnauthorized)
 			ctx.Abort()
 			return
 		}
@@ -30,7 +30,7 @@ func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}), zap.Error(err))
-			response.Error(ctx, http.StatusUnauthorized, ErrUnauthorized, nil)
+			response.Error(ctx, ErrUnauthorized)
 			ctx.Abort()
 			return
 		}
