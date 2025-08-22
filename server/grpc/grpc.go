@@ -3,7 +3,7 @@ package grpc
 import (
 	"context"
 	"fmt"
-	"github.com/zsljava/gokit/log"
+	"github.com/zsljava/gokit/util/log"
 	"google.golang.org/grpc"
 	"net"
 	"time"

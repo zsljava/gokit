@@ -3,7 +3,7 @@ package middleware
 import (
 	"bytes"
 	"github.com/gin-gonic/gin"
-	"github.com/zsljava/gokit/log"
+	"github.com/zsljava/gokit/util/log"
 	"go.uber.org/zap"
 	"io"
 	"time"

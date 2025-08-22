@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/zsljava/gokit/log"
+	"github.com/zsljava/gokit/util/log"
 	"net/http"
 	"time"
 )

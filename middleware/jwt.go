@@ -2,13 +2,14 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/zsljava/gokit/common/exception"
 	"github.com/zsljava/gokit/common/response"
-	"github.com/zsljava/gokit/jwt"
-	"github.com/zsljava/gokit/log"
+	"github.com/zsljava/gokit/util/jwt"
+	"github.com/zsljava/gokit/util/log"
 	"go.uber.org/zap"
 	"net/http"
 )
+
+var ErrUnauthorized = response.NewError(http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized))
 
 func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -18,7 +19,7 @@ func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
-			response.Error(ctx, http.StatusUnauthorized, exception.ErrUnauthorized, nil)
+			response.Error(ctx, http.StatusUnauthorized, ErrUnauthorized, nil)
 			ctx.Abort()
 			return
 		}
@@ -29,7 +30,7 @@ func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}), zap.Error(err))
-			response.Error(ctx, http.StatusUnauthorized, exception.ErrUnauthorized, nil)
+			response.Error(ctx, http.StatusUnauthorized, ErrUnauthorized, nil)
 			ctx.Abort()
 			return
 		}

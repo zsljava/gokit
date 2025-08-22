@@ -1,4 +1,4 @@
-package constant
+package global
 
 const (
 	TraceIDKey = "trace_id"

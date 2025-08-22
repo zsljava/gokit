@@ -22,7 +22,29 @@ func Success(ctx *gin.Context, data interface{}) {
 	ctx.JSON(http.StatusOK, resp)
 }
 
-func Error(ctx *gin.Context, httpCode int, err error, data interface{}) {
+func Error(ctx *gin.Context, err error, data interface{}) {
+	if data == nil {
+		data = map[string]string{}
+	}
+	resp := Response{Code: errorCodeMap[err], Message: err.Error(), Data: data, TraceId: util.GetTraceId(ctx)}
+	if _, ok := errorCodeMap[err]; !ok {
+		resp = Response{Code: 500, Message: "unknown common", Data: data}
+	}
+	ctx.JSON(http.StatusOK, resp)
+}
+
+func ErrorWithData(ctx *gin.Context, err error, data interface{}) {
+	if data == nil {
+		data = map[string]string{}
+	}
+	resp := Response{Code: errorCodeMap[err], Message: err.Error(), Data: data, TraceId: util.GetTraceId(ctx)}
+	if _, ok := errorCodeMap[err]; !ok {
+		resp = Response{Code: 500, Message: "unknown common", Data: data}
+	}
+	ctx.JSON(http.StatusOK, resp)
+}
+
+func ErrorWithHttpCodeData(ctx *gin.Context, httpCode int, err error, data interface{}) {
 	if data == nil {
 		data = map[string]string{}
 	}

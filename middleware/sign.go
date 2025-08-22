@@ -4,13 +4,14 @@ import (
 	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
-	"github.com/zsljava/gokit/common/exception"
 	"github.com/zsljava/gokit/common/response"
-	"github.com/zsljava/gokit/log"
+	"github.com/zsljava/gokit/util/log"
 	"net/http"
 	"sort"
 	"strings"
 )
+
+var ErrBadRequest = response.NewError(http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
 
 func SignMiddleware(logger *log.Logger, conf *viper.Viper) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -19,7 +20,7 @@ func SignMiddleware(logger *log.Logger, conf *viper.Viper) gin.HandlerFunc {
 		for _, header := range requiredHeaders {
 			value, ok := ctx.Request.Header[header]
 			if !ok || len(value) == 0 {
-				response.Error(ctx, http.StatusBadRequest, exception.ErrBadRequest, nil)
+				response.Error(ctx, http.StatusBadRequest, ErrBadRequest, nil)
 				ctx.Abort()
 				return
 			}
@@ -45,7 +46,7 @@ func SignMiddleware(logger *log.Logger, conf *viper.Viper) gin.HandlerFunc {
 		str += conf.GetString("security.api_sign.app_security")
 
 		if ctx.Request.Header.Get("Sign") != strings.ToUpper(cryptor.Md5String(str)) {
-			response.Error(ctx, http.StatusBadRequest, exception.ErrBadRequest, nil)
+			response.Error(ctx, http.StatusBadRequest, ErrBadRequest, nil)
 			ctx.Abort()
 			return
 		}
